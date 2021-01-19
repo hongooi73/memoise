@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Azure Storage Cache
-Azure Storage backed cache, for remote caching. You can use either file, blob or ADLSgen2 storage. — cache_azure • memoise</title>
+<title>Azure Storage Cache — cache_azure • memoise</title>
 
 
 <!-- jquery -->
@@ -40,10 +39,8 @@ Azure Storage backed cache, for remote caching. You can use either file, blob or
 
 
 
-<meta property="og:title" content="Azure Storage Cache
-Azure Storage backed cache, for remote caching. You can use either file, blob or ADLSgen2 storage. — cache_azure" />
-<meta property="og:description" content="Azure Storage Cache
-Azure Storage backed cache, for remote caching. You can use either file, blob or ADLSgen2 storage." />
+<meta property="og:title" content="Azure Storage Cache — cache_azure" />
+<meta property="og:description" content="Azure Storage backed cache, for remote caching. File, blob and ADLSgen2 storage are all supported." />
 
 
 
@@ -114,26 +111,16 @@ Azure Storage backed cache, for remote caching. You can use either file, blob or
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Azure Storage Cache
-Azure Storage backed cache, for remote caching. You can use either file, blob or ADLSgen2 storage.</h1>
+    <h1>Azure Storage Cache</h1>
     <small class="dont-index">Source: <a href='https://github.com/r-lib/memoise/blob/master/R/cache_azure.R'><code>R/cache_azure.R</code></a></small>
     <div class="hidden name"><code>cache_azure.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Azure Storage Cache
-Azure Storage backed cache, for remote caching. You can use either file, blob or ADLSgen2 storage.</p>
+    <p>Azure Storage backed cache, for remote caching. File, blob and ADLSgen2 storage are all supported.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cache_azure</span><span class='op'>(</span>
-  <span class='va'>cache_name</span>,
-  <span class='va'>account</span>,
-  key <span class='op'>=</span> <span class='cn'>NULL</span>,
-  token <span class='op'>=</span> <span class='cn'>NULL</span>,
-  sas <span class='op'>=</span> <span class='cn'>NULL</span>,
-  algo <span class='op'>=</span> <span class='st'>"sha512"</span>,
-  compress <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cache_azure</span><span class='op'>(</span><span class='va'>cache_name</span>, <span class='va'>endpoint</span>, compress <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,30 +130,17 @@ Azure Storage backed cache, for remote caching. You can use either file, blob or
       <td><p>Name of the storage container for storing cache files.</p></td>
     </tr>
     <tr>
-      <th>account</th>
-      <td><p>The storage account for the cache. This should be an object of class <code><a href='https://rdrr.io/pkg/AzureStor/man/storage_endpoint.html'>AzureStor::storage_endpoint</a></code>, or inheriting from it. Alternatively, you can provide the storage endpoint URL, along with one of the authentication arguments <code>key</code>, <code>token</code> or <code>sas</code>.</p></td>
-    </tr>
-    <tr>
-      <th>key</th>
-      <td><p>The access key for the storage account.</p></td>
-    </tr>
-    <tr>
-      <th>token</th>
-      <td><p>An Azure Active Directory (AAD) authentication token. This can be either a string, or an object of class <code>AzureToken</code> created by <code><a href='https://rdrr.io/pkg/AzureAuth/man/get_azure_token.html'>AzureAuth::get_azure_token</a></code>. The latter is the recommended way of doing it, as it allows for automatic refreshing of expired tokens.</p></td>
-    </tr>
-    <tr>
-      <th>sas</th>
-      <td><p>A shared access signature (SAS) for the account.</p></td>
-    </tr>
-    <tr>
-      <th>algo</th>
-      <td><p>The hashing algorithm used for the cache, see
-<code><a href='https://rdrr.io/pkg/digest/man/digest.html'>digest</a></code> for available algorithms.</p></td>
+      <th>endpoint</th>
+      <td><p>The storage account endpoint for the cache. This should be an object of class <code><a href='https://rdrr.io/pkg/AzureStor/man/storage_endpoint.html'>AzureStor::storage_endpoint</a></code>, or inheriting from it. Alternatively, you can provide the endpoint URL as a string, and pass any authentication arguments in `...`.</p></td>
     </tr>
     <tr>
       <th>compress</th>
       <td><p>Argument passed to <code>saveRDS</code>. One of FALSE, "gzip",
 "bzip2" or "xz". Default: FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Further arguments that will be passed to <code><a href='https://rdrr.io/pkg/AzureStor/man/storage_endpoint.html'>AzureStor::storage_endpoint</a></code>, if <code>endpoint</code> is a URL.</p></td>
     </tr>
     </table>
 
@@ -176,18 +150,25 @@ Azure Storage backed cache, for remote caching. You can use either file, blob or
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/Azure/AzureStor'>AzureStor</a></span><span class='op'>)</span>
 
-<span class='va'>stor</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/AzureStor/man/generics.html'>storage_container</a></span><span class='op'>(</span><span class='st'>"https://blob.{accountname}.core.windows.net"</span>,
-                          key<span class='op'>=</span><span class='st'>"{storage-key}"</span><span class='op'>)</span>
-
+<span class='co'># use Azure blob storage for the cache</span>
+<span class='va'>stor</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/AzureStor/man/storage_endpoint.html'>storage_endpoint</a></span><span class='op'>(</span><span class='st'>"https://blob.accountname.core.windows.net"</span>, key<span class='op'>=</span><span class='st'>"storage-key"</span><span class='op'>)</span>
 <span class='va'>azcache</span> <span class='op'>&lt;-</span> <span class='fu'>cache_azure</span><span class='op'>(</span><span class='st'>"cache_container"</span>, <span class='va'>stor</span><span class='op'>)</span>
 <span class='va'>mem_runif</span> <span class='op'>&lt;-</span> <span class='fu'><a href='memoise.html'>memoise</a></span><span class='op'>(</span><span class='va'>runif</span>, cache <span class='op'>=</span> <span class='va'>azcache</span><span class='op'>)</span>
 
 
-<span class='co'># alternative way of specifying the account</span>
-<span class='va'>azcache</span> <span class='op'>&lt;-</span> <span class='fu'>cache_azure</span><span class='op'>(</span><span class='st'>"cache_container"</span>, <span class='st'>"https://blob.{accountname}.core.windows.net"</span>,
-                       key<span class='op'>=</span><span class='st'>"{storage_key}"</span><span class='op'>)</span>
-<span class='op'>}</span>
+<span class='co'># you can also pass the endpoint URL and key to cache_azure:</span>
+<span class='va'>azcache</span> <span class='op'>&lt;-</span> <span class='fu'>cache_azure</span><span class='op'>(</span><span class='st'>"cache_container"</span>, <span class='st'>"https://blob.accountname.core.windows.net"</span>,
+                       key <span class='op'>=</span> <span class='st'>"storage-key"</span><span class='op'>)</span>
 
+<span class='co'># a better alternative to a master key: OAuth 2.0 authentication via AAD</span>
+<span class='va'>token</span> <span class='op'>&lt;-</span> <span class='fu'>AzureAuth</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/AzureAuth/man/get_azure_token.html'>get_azure_token</a></span><span class='op'>(</span>
+  <span class='st'>"https://storage.azure.com"</span>,
+  tenant <span class='op'>=</span> <span class='st'>"mytenant"</span>,
+  app <span class='op'>=</span> <span class='st'>"app_id"</span>
+<span class='op'>)</span>
+<span class='va'>azcache</span> <span class='op'>&lt;-</span> <span class='fu'>cache_azure</span><span class='op'>(</span><span class='st'>"cache_container"</span>, <span class='st'>"https://blob.accountname.core.windows.net"</span>,
+                       token <span class='op'>=</span> <span class='va'>token</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 </div></pre>
   </div>
