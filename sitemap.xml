@@ -4,6 +4,9 @@
     <loc>https://memoise.r-lib.org/index.html</loc>
   </url>
   <url>
+    <loc>https://memoise.r-lib.org/reference/cache_azure.html</loc>
+  </url>
+  <url>
     <loc>https://memoise.r-lib.org/reference/cache_filesystem.html</loc>
   </url>
   <url>
